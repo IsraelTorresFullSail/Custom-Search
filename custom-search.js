@@ -1,18 +1,46 @@
 //================== Custom Search ==================//
+/**
+ * data-title = 'search';
+ * data-date = 'search';
+ * data-image = 'search';
+ * data-content = 'search';
+ * data-link = 'search';
+ * document.querySelectorAll('[data-title]').innerText;
+ *  let titles = document.querySelectorAll('[data-title]');
+    for (let i = 0; i < titles.length; i++) {
+        console.log(titles[i].innerText)
+    }
+ */
+
+
 let postList = [];
+let postListUpdated = [];
 let post = document.querySelectorAll('.post-wrapper');
-//console.log(post)
+
 for (let i = 0; i < post.length; i++) {
-  let image = post[i].firstChild.src;
-  let title = post[i].text;
-  let link = post[i].href;
-  postList.push({image, title, link});
+  let content = post[i].innerText;
+  let link = post[i].children[3].href;
+  let title = post[i].firstChild.innerText;
+  postList.push({content, link, title});
 }
-localStorage.setItem('postList', JSON.stringify(postList));
+
+let existingPostList = JSON.parse(localStorage.getItem('postList', JSON.stringify(postList)));
+
+if(existingPostList !== null) {
+    postListUpdated = Object.values(existingPostList);
+    for (let i = 0; i < postList.length; i++) {
+    	if (!postListUpdated.find(o => o.content === postList[i].content && o.link === postList[i].link && o.title === postList[i].title)){
+     		postListUpdated.push(postList[i])
+     	}
+    }
+    localStorage.setItem('postList', JSON.stringify(postListUpdated));
+} else {
+    localStorage.setItem('postList', JSON.stringify(postList));
+}
 
 function searchAList(search) {
     return function (searchMe){
-        return searchMe.title.toLowerCase().includes(search.toLowerCase()) || !search
+        return searchMe.content.toLowerCase().includes(search.toLowerCase()) || !search
     }  
 };
 
@@ -26,7 +54,6 @@ document.getElementById('search').addEventListener('input', function(e) {
 let returnList;
 window.addEventListener('load', (event) => {
     returnList = JSON.parse(localStorage.getItem('postList'))
-    //console.log(returnList)
 });
   
 
@@ -34,8 +61,7 @@ document.getElementById('search').addEventListener('input', function() {
     const getSearch = JSON.parse(localStorage.getItem('search'));
     let myList = returnList.filter(searchAList(getSearch)).map(item => {
         return `<div class="item">
-                    <img src="${item.image}" alt="post">
-                    <a class="item-link" href="${item.link}">${item.title}</a>
+                    <a class="orange-link" href="${item.link}">${item.title}</a>
                 </div>`;
             
     });
@@ -49,5 +75,3 @@ document.getElementById('search').addEventListener('input', function() {
         document.querySelector('.result-container').style.display = 'flex';
     }
 });
-
-
