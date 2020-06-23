@@ -1,18 +1,4 @@
 //================== Custom Search ==================//
-/**
- * data-title = 'search';
- * data-date = 'search';
- * data-image = 'search';
- * data-content = 'search';
- * data-link = 'search';
- * document.querySelectorAll('[data-title]').innerText;
- *  let titles = document.querySelectorAll('[data-title]');
-    for (let i = 0; i < titles.length; i++) {
-        console.log(titles[i].innerText)
-    }
- */
-
-
 let postList = [];
 let postListUpdated = [];
 let post = document.querySelectorAll('.post-wrapper');
@@ -47,7 +33,6 @@ function searchAList(search) {
 let search = [];
 document.getElementById('search').addEventListener('input', function(e) {
     search = e.target.value;
-    //console.log(e.target.value);
     localStorage.setItem('search', JSON.stringify(search));
 });
   
@@ -65,10 +50,9 @@ document.getElementById('search').addEventListener('input', function() {
                 </div>`;
             
     });
-    //console.log(myList)
+
     document.querySelector('.result-container').innerHTML = myList.join(' ');
 
-    // Show or hide result-container if search input is empty
     if(document.getElementById('search').value == '') {
         document.querySelector('.result-container').style.display = 'none';
     } else {
